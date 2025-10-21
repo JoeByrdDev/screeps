@@ -1,12 +1,3 @@
-/*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports.thing = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('util');
- * mod.thing == 'a thing'; // true
- */
-
 module.exports = {
     setHarvesting: function(c){
         if (c.store.getFreeCapacity() == 0) {
@@ -35,5 +26,34 @@ module.exports = {
     }, 
     coinFlip: function() {
         return Math.random() > .5
+    },
+    runTower: function(roomName) {
+        var room = Game.rooms[roomName]
+        var towers = room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}})
+        if (towers.length > 0) {
+            var roads = room.find(FIND_STRUCTURES, {filter: (structure) => {
+                return structure.structureType == STRUCTURE_ROAD && structure.hits < structure.hitsMax * .85 }})
+        
+            var ramparts = room.find(FIND_STRUCTURES, {filter: (structure) => {
+                return structure.structureType == STRUCTURE_RAMPART && structure.hits <  1300}})
+    
+            var hostiles = room.find(FIND_HOSTILE_CREEPS)
+            
+            if(hostiles.length > 0) {
+                towers.forEach(tower => tower.attack(hostiles[0]))
+                return
+            }
+            
+            if (roads.length > 0) {
+                towers.forEach(tower => tower.repair(roads[0]))
+                return
+            }
+    
+            if (ramparts.length > 0) {
+                towers.forEach(tower => tower.repair(ramparts[0]))
+                return
+            }
+    
+        }
     }
 };
