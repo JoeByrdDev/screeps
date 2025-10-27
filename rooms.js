@@ -7,6 +7,10 @@ module.exports = {
         rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_basic", {harvesting: false})
         var c = Game.creeps[r + "_basic"]
         jobs.runBasic(c, r)
+        rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_builder", {harvesting: false})
+        jobs.runBasic(Game.creeps[r + "_builder"], r)
+        rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_filler", {harvesting: false})
+        jobs.runBasic(Game.creeps[r + "_filler"], r)
     },
     runLevel2 : function(r) {
         var rSpawn = Game.spawns["Spawn_" + r]

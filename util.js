@@ -35,7 +35,7 @@ module.exports = {
                 return structure.structureType == STRUCTURE_ROAD && structure.hits < structure.hitsMax * .85 }})
         
             var ramparts = room.find(FIND_STRUCTURES, {filter: (structure) => {
-                return structure.structureType == STRUCTURE_RAMPART && structure.hits <  1300}})
+                return structure.structureType == STRUCTURE_RAMPART && structure.hits <  5000}})
     
             var hostiles = room.find(FIND_HOSTILE_CREEPS)
             

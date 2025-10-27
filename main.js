@@ -1,7 +1,7 @@
 var room = require("rooms")
 var util = require("util")
 
-var rooms = ['E23S16']
+var rooms = ['W22S23']
 
 for (var i in rooms) {
     var r = rooms[i]
