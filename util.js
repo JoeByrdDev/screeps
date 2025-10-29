@@ -26,13 +26,42 @@ module.exports = {
         }
     },
     runClaimer: function(claimer) {
-        //Game.spawns["Spawn_W22S23"].spawnCreep([MOVE,CLAIM], "claimer", {newRoom: 'W23S23"})
+        //Game.spawns["Spawn_W22S23"].spawnCreep([MOVE,CLAIM], "claimer", {memory:{newRoom: "W23S23"}})
         if (claimer.pos.roomName != claimer.memory.newRoom) {
-            creep.moveTo(new RoomPosition(10,10,claimer.memory.newRoom))
+            claimer.moveTo(new RoomPosition(10,10,claimer.memory.newRoom))
         } else {
             claimer.moveTo(claimer.room.controller)
             claimer.claimController(claimer.room.controller)
         }
+    },
+    runOutbuilder: function(outbuilder) {
+        //Game.spawns["Spawn_W22S23"].spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], "outbuilder", {memory:{newRoom: "W23S23"}})
+        if (outbuilder.pos.roomName != outbuilder.memory.newRoom) {
+            outbuilder.moveTo(new RoomPosition(10,10,outbuilder.memory.newRoom))
+        } else {
+            this.setHarvesting(outbuilder)
+            if (outbuilder.memory.harvesting) {
+                this.harvest(outbuilder)
+                return
+            }
+            
+            r = outbuilder.pos.roomName
+            if (Game.spawns["Spawn_"+r] && Game.spawns["Spawn_"+r].store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+                outbuilder.moveTo(Game.spawns["Spawn_"+r]);
+                outbuilder.transfer(Game.spawns["Spawn_"+r], RESOURCE_ENERGY)
+                return
+            }
+            
+            var buildSpots = Game.rooms[r].find(FIND_CONSTRUCTION_SITES)
+            if (buildSpots.length > 0) {
+                if(outbuilder.build(buildSpots[0]) == ERR_NOT_IN_RANGE) {
+                    outbuilder.moveTo(buildSpots[0], {reusePath:0})
+                }
+            } else {
+                this.upgradeController(outbuilder, Game.rooms[r].controller)
+            }
+        }
+        
     },
     runTowers: function(roomName) {
         var room = Game.rooms[roomName]

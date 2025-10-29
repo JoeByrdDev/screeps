@@ -1,7 +1,7 @@
 var jobs = require("jobs")
 var util = require("util")
 
-const DEFAULT_MEMORY = {harvesting: false}
+const DEFAULT_MEMORY = {memory:{harvesting: false}}
 
 const WORKER_BODY_250 = [WORK, CARRY, MOVE, MOVE]
 const WORKER_BODY_500 = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
