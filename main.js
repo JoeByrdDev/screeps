@@ -1,7 +1,7 @@
 var room = require("rooms")
 var util = require("util")
 
-var rooms = ['W22S23']
+var rooms = ['W22S23', 'W23S23', 'W22S21', 'W21S22']
 
 var claimer = Game.creeps["claimer"]
 if (claimer) {
@@ -32,6 +32,17 @@ if (outbuilder2) {
     }
 } else {
     Game.spawns["Spawn_W22S23"].spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], "outbuilder2", {memory:{newRoom: "W22S21"}})
+}
+
+var outbuilder3 = Game.creeps["outbuilder3"]
+if (outbuilder3) {
+    try {
+        util.runOutbuilder(outbuilder3)
+    } catch (e) {
+        console.log("Outbuilder3 error: " + e)
+    }
+} else {
+    Game.spawns["Spawn_W22S23"].spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], "outbuilder3", {memory:{newRoom: "W21S22"}})
 }
 
 for (var i in rooms) {
