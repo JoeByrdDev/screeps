@@ -1,126 +1,37 @@
 var jobs = require("jobs")
 var util = require("util")
 
-module.exports = {
-    runLevel1 : function(r) {
-        var rSpawn = Game.spawns["Spawn_" + r]
-        rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_basic", {harvesting: false})
-        var c = Game.creeps[r + "_basic"]
-        jobs.runBasic(c, r)
-        rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_builder", {harvesting: false})
-        jobs.runBasic(Game.creeps[r + "_builder"], r)
-        rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_filler", {harvesting: false})
-        jobs.runBasic(Game.creeps[r + "_filler"], r)
-    },
-    runLevel2 : function(r) {
-        var rSpawn = Game.spawns["Spawn_" + r]
-        if (Game.rooms[r].energyCapacityAvailable > 500) {
-            if (Game.rooms[r].energyAvailable >= 550) {
-                rSpawn.spawnCreep([WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_filler", {harvesting: false})
-                rSpawn.spawnCreep([WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_builder", {harvesting: false})
-                rSpawn.spawnCreep([WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic", {harvesting: false})
-            } else {
-                rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_filler", {harvesting: false})
-                rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_builder", {harvesting: false})
-                rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_basic", {harvesting: false})
-            }
-        } else {
-            rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_builder", {harvesting: false})
-            rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_basic", {harvesting: false})
-        }
-        jobs.runBasic(Game.creeps[r + "_basic"], r)
-        jobs.runBuilder (Game.creeps[r + "_builder"], r)
-        jobs.runFiller(Game.creeps[r + "_filler"], r)
-    },
-    runLevel3 : function(r) {
-        var rSpawn = Game.spawns["Spawn_" + r]
-        
-        if (Game.rooms[r].energyAvailable > 700) {
-            rSpawn.spawnCreep([WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_filler", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_builder", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic2", {harvesting: false})
-        } else if (Game.rooms[r].energyAvailable > 500) {
-            rSpawn.spawnCreep([WORK, CARRY, CARRY, MOVE, MOVE, MOVE], r + "_filler", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, CARRY, MOVE, MOVE, MOVE], r + "_builder", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, CARRY, MOVE, MOVE, MOVE], r + "_basic", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, CARRY, MOVE, MOVE, MOVE], r + "_basic2", {harvesting: false})
-        } else {
-            rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_filler", {harvesting: false})
-            rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_builder", {harvesting: false})
-            rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_basic", {harvesting: false})
-            rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_basic2", {harvesting: false})
-        }
-        
-        jobs.runBuilder(Game.creeps[r + "_builder"], r)
-        jobs.runBuilder(Game.creeps[r + "_basic"], r)
-        jobs.runFiller(Game.creeps[r + "_basic2"], r)
-        jobs.runFiller(Game.creeps[r + "_filler"], r)
-    },
-    runLevel4 : function(r) {
-        var rSpawn = Game.spawns["Spawn_" + r]
-        
-        if (Game.rooms[r].energyAvailable > 1000) {
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_filler", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_builder", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic2", {harvesting: false})
-        } else if (Game.rooms[r].energyAvailable > 700) {
-            rSpawn.spawnCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_filler", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_builder", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic2", {harvesting: false})
+const DEFAULT_MEMORY = {harvesting: false}
 
-        } else if (Game.rooms[r].energyAvailable > 500) {
-            rSpawn.spawnCreep([WORK, CARRY, CARRY, MOVE, MOVE, MOVE], r + "_filler", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, CARRY, MOVE, MOVE, MOVE], r + "_builder", {harvesting: false})
-            //rSpawn.spawnCreep([WORK, WORK, CARRY, MOVE, MOVE, MOVE], r + "_basic", {harvesting: false})
-            //rSpawn.spawnCreep([WORK, WORK, CARRY, MOVE, MOVE, MOVE], r + "_basic2", {harvesting: false})
-        } else {
-            rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_filler", {harvesting: false})
-            //rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_builder", {harvesting: false})
-            //rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_basic", {harvesting: false})
-            //rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_basic2", {harvesting: false})
-        }
-        
-        jobs.runBuilder(Game.creeps[r + "_builder"], r)
-        jobs.runBuilder(Game.creeps[r + "_basic"], r)
-        jobs.runFiller(Game.creeps[r + "_basic2"], r)
-        jobs.runFiller(Game.creeps[r + "_filler"], r)
-    },
-    runLevel5 : function(r) {
+const WORKER_BODY_250 = [WORK, CARRY, MOVE, MOVE]
+const WORKER_BODY_500 = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
+const WORKER_BODY_750 = [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+const WORKER_BODY_1000 = [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+
+var getWorkerBody = function(energy) {
+    if (energy >= 1000) {
+        return WORKER_BODY_1000
+    } else if (energy >= 750) {
+        return WORKER_BODY_750
+    } else if (energy >= 500) {
+        return WORKER_BODY_500
+    } else {
+        return WORKER_BODY_250
+    }
+}
+
+module.exports = {
+    basicRoom : function(r) {
+        var energy = Game.rooms[r].energyAvailable
         var rSpawn = Game.spawns["Spawn_" + r]
-        
-        if (Game.rooms[r].energyAvailable > 1400) {
-            rSpawn.spawnCreep([WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_filler", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_builder", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic2", {harvesting: false})
-        } else if (Game.rooms[r].energyAvailable > 1000) {
-            rSpawn.spawnCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_filler", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_builder", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic2", {harvesting: false})
-        } else if (Game.rooms[r].energyAvailable > 700) {
-            rSpawn.spawnCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_filler", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_builder", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE], r + "_basic2", {harvesting: false})
-        } else if (Game.rooms[r].energyAvailable > 500) {
-            rSpawn.spawnCreep([WORK, CARRY, CARRY, MOVE, MOVE, MOVE], r + "_filler", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, CARRY, MOVE, MOVE, MOVE], r + "_builder", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, CARRY, MOVE, MOVE, MOVE], r + "_basic", {harvesting: false})
-            rSpawn.spawnCreep([WORK, WORK, CARRY, MOVE, MOVE, MOVE], r + "_basic2", {harvesting: false})
-        } else {
-            rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_filler", {harvesting: false})
-            rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_builder", {harvesting: false})
-            rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_basic", {harvesting: false})
-            rSpawn.spawnCreep([WORK, CARRY, MOVE, MOVE], r + "_basic2", {harvesting: false})
-        }
-        
+        util.runTowers(r)
+        rSpawn.spawnCreep(getWorkerBody(energy), r + "_basic", DEFAULT_MEMORY)
+        rSpawn.spawnCreep(getWorkerBody(energy), r + "_builder", DEFAULT_MEMORY)
+        rSpawn.spawnCreep(getWorkerBody(energy), r + "_basic2", DEFAULT_MEMORY)
+        rSpawn.spawnCreep(getWorkerBody(energy), r + "_filler", DEFAULT_MEMORY)
+        jobs.runBasic(Game.creeps[r + "_basic"], r)
+        jobs.runBuilder(Game.creeps[r + "_basic2"], r)
         jobs.runBuilder(Game.creeps[r + "_builder"], r)
-        jobs.runBuilder(Game.creeps[r + "_basic"], r)
-        jobs.runFiller(Game.creeps[r + "_basic2"], r)
         jobs.runFiller(Game.creeps[r + "_filler"], r)
     }
 };
