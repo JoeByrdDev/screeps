@@ -1,7 +1,7 @@
 var room = require("rooms")
 var util = require("util")
 
-var rooms = ['W22S23', 'W23S23', 'W22S21', 'W21S22']
+var rooms = ['W22S23', 'W23S23', 'W22S21', 'W21S22', 'W23S21', 'W22S22']
 
 var claimer = Game.creeps["claimer"]
 if (claimer) {
@@ -12,37 +12,21 @@ if (claimer) {
     }
 }
 
-var outbuilder = Game.creeps["outbuilder"]
-if (outbuilder) {
-    try {
-        util.runOutbuilder(outbuilder)
-    } catch (e) {
-        console.log("Outbuilder error: " + e)
+var outbuilders = [
+    {name:"outbuilder", room:"W23S21"}, 
+    {name:"outbuilder2", room:"W22S22"}, 
+    {name:"outbuilder3", room:"W21S22"}]
+for (var o of outbuilders) {
+    var outbuilder = Game.creeps[o.name]
+    if (outbuilder) {
+        try {
+            util.runOutbuilder(outbuilder)
+        } catch (e) {
+            console.log(o.name + " error: " + e)
+        }
+    } else {
+        Game.spawns["Spawn_W22S23"].spawnCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], o.name, {memory:{newRoom: o.room}})
     }
-} else {
-    Game.spawns["Spawn_W22S23"].spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], "outbuilder", {memory:{newRoom: "W23S23"}})
-}
-
-var outbuilder2 = Game.creeps["outbuilder2"]
-if (outbuilder2) {
-    try {
-        util.runOutbuilder(outbuilder2)
-    } catch (e) {
-        console.log("Outbuilder2 error: " + e)
-    }
-} else {
-    Game.spawns["Spawn_W22S23"].spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], "outbuilder2", {memory:{newRoom: "W22S21"}})
-}
-
-var outbuilder3 = Game.creeps["outbuilder3"]
-if (outbuilder3) {
-    try {
-        util.runOutbuilder(outbuilder3)
-    } catch (e) {
-        console.log("Outbuilder3 error: " + e)
-    }
-} else {
-    Game.spawns["Spawn_W22S23"].spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], "outbuilder3", {memory:{newRoom: "W21S22"}})
 }
 
 for (var i in rooms) {

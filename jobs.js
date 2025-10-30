@@ -20,6 +20,12 @@ module.exports = {
                 return
             }
             
+            if (Game.spawns["Spawn_"+r] && Game.spawns["Spawn_"+r].store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+                c.moveTo(Game.spawns["Spawn_"+r])
+                c.transfer(Game.spawns["Spawn_"+r], RESOURCE_ENERGY)
+                return
+            }
+            
             const towers = c.room.find(FIND_MY_STRUCTURES, {filter: (structure) => { 
                 return structure.structureType == STRUCTURE_TOWER && structure.store.getUsedCapacity(RESOURCE_ENERGY) < structure.store.getCapacity(RESOURCE_ENERGY) / 2
             }})
@@ -41,12 +47,6 @@ module.exports = {
             util.setHarvesting(c)
             if (c.memory.harvesting) {
                 util.harvest(c)
-                return
-            }
-            
-            if (Game.spawns["Spawn_"+r] && Game.spawns["Spawn_"+r].store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-                c.moveTo(Game.spawns["Spawn_"+r]);
-                c.transfer(Game.spawns["Spawn_"+r], RESOURCE_ENERGY)
                 return
             }
             
