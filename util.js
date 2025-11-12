@@ -26,7 +26,7 @@ module.exports = {
         }
     },
     runClaimer: function(claimer) {
-        //Game.spawns["Spawn_W22S23"].spawnCreep([MOVE,CLAIM], "claimer", {memory:{newRoom: "W23S23"}})
+        //Game.spawns["Spawn_W21S22"].spawnCreep([MOVE,CLAIM], "claimer", {memory:{newRoom: "W21S23"}})
         if (claimer.pos.roomName != claimer.memory.newRoom) {
             claimer.moveTo(new RoomPosition(10,10,claimer.memory.newRoom))
         } else {
@@ -37,7 +37,7 @@ module.exports = {
     runOutbuilder: function(outbuilder) {
         //Game.spawns["Spawn_W22S23"].spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], "outbuilder", {memory:{newRoom: "W23S23"}})
         if (outbuilder.pos.roomName != outbuilder.memory.newRoom) {
-            outbuilder.moveTo(new RoomPosition(10,10,outbuilder.memory.newRoom))
+            outbuilder.moveTo(new RoomPosition(10,10,outbuilder.memory.newRoom), {reusePath:10})
         } else {
             this.setHarvesting(outbuilder)
             if (outbuilder.memory.harvesting) {

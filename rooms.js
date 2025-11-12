@@ -25,13 +25,33 @@ module.exports = {
         var energy = Game.rooms[r].energyAvailable
         var rSpawn = Game.spawns["Spawn_" + r]
         util.runTowers(r)
-        rSpawn.spawnCreep(getWorkerBody(energy), r + "_basic", DEFAULT_MEMORY)
-        rSpawn.spawnCreep(getWorkerBody(energy), r + "_builder", DEFAULT_MEMORY)
-        rSpawn.spawnCreep(getWorkerBody(energy), r + "_basic2", DEFAULT_MEMORY)
-        rSpawn.spawnCreep(getWorkerBody(energy), r + "_filler", DEFAULT_MEMORY)
-        jobs.runBasic(Game.creeps[r + "_basic"], r)
-        jobs.runBuilder(Game.creeps[r + "_basic2"], r)
-        jobs.runBuilder(Game.creeps[r + "_builder"], r)
-        jobs.runFiller(Game.creeps[r + "_filler"], r)
+        var basic = Game.creeps[r + "_basic"]
+        var basic2 = Game.creeps[r + "_basic2"]
+        var builder = Game.creeps[r + "_builder"]
+        var filler = Game.creeps[r + "_filler"]
+        
+        if (!basic) {
+            rSpawn.spawnCreep(getWorkerBody(energy), r + "_basic", DEFAULT_MEMORY)
+        } else {
+            jobs.runFiller(basic, r)
+        }
+        
+        if (!basic2) {
+            rSpawn.spawnCreep(getWorkerBody(energy), r + "_basic2", DEFAULT_MEMORY)
+        } else {
+            jobs.runBuilder(basic, r)
+        }
+        
+        if (!builder) {
+            rSpawn.spawnCreep(getWorkerBody(energy), r + "_builder", DEFAULT_MEMORY)
+        } else {
+            jobs.runBuilder(basic, r)
+        }
+        
+        if (!filler) {
+            rSpawn.spawnCreep(getWorkerBody(energy), r + "_filler", DEFAULT_MEMORY)
+        } else {
+            jobs.runFiller(basic, r)
+        }
     }
 };
