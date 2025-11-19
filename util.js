@@ -27,17 +27,33 @@ module.exports = {
     },
     runClaimer: function(claimer) {
         //Game.spawns["Spawn_W21S22"].spawnCreep([MOVE,CLAIM], "claimer", {memory:{newRoom: "W21S23"}})
+        /*
         if (claimer.pos.roomName != claimer.memory.newRoom) {
             claimer.moveTo(new RoomPosition(10,10,claimer.memory.newRoom))
         } else {
             claimer.moveTo(claimer.room.controller)
             claimer.claimController(claimer.room.controller)
         }
+        */
+        //W7S8
+        //if (claimer.pos.roomName != "W10S10") {
+        //    claimer.moveTo(new RoomPosition(35,40,"W20S20"))
+        //    return
+        //} 
+        //claimer.moveTo(22,18)
+        //claimer.moveTo(25,32)
+        //claimer.moveTo(new RoomPosition(25,32,"W10S10"))
+        claimer.moveTo(new RoomPosition(19,21,"W7S8"))
+        claimer.moveTo(claimer.room.controller)
+        claimer.claimController(claimer.room.controller)
+        return
+        
+        
     },
     runOutbuilder: function(outbuilder) {
         //Game.spawns["Spawn_W22S23"].spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], "outbuilder", {memory:{newRoom: "W23S23"}})
-        if (outbuilder.pos.roomName != outbuilder.memory.newRoom) {
-            outbuilder.moveTo(new RoomPosition(10,10,outbuilder.memory.newRoom), {reusePath:10})
+        if (outbuilder.pos.roomName != "W7S8") {
+            outbuilder.moveTo(new RoomPosition(10,10,"W7S8"), {reusePath:10})
         } else {
             this.setHarvesting(outbuilder)
             if (outbuilder.memory.harvesting) {
@@ -62,6 +78,18 @@ module.exports = {
             }
         }
         
+    },
+    runSharder: function(sharder) {
+        if (!sharder) return
+        if(Game.shard.name == "shard0") {
+            sharder.moveTo(new RoomPosition(35,40,"W20S20"), {reusePath:10})
+        } else if (Game.shard.name == "shard1") {
+            sharder.moveTo(22,18)
+        } else if (Game.shard.name == "shard2") {
+            sharder.moveTo(25,32)
+        } else {
+            this.runOutbuilder(sharder)
+        }
     },
     runTowers: function(roomName) {
         var room = Game.rooms[roomName]

@@ -39,19 +39,19 @@ module.exports = {
         if (!basic2) {
             rSpawn.spawnCreep(getWorkerBody(energy), r + "_basic2", DEFAULT_MEMORY)
         } else {
-            jobs.runBuilder(basic, r)
+            jobs.runBuilder(basic2, r)
         }
         
         if (!builder) {
             rSpawn.spawnCreep(getWorkerBody(energy), r + "_builder", DEFAULT_MEMORY)
         } else {
-            jobs.runBuilder(basic, r)
+            jobs.runBuilder(builder, r)
         }
         
         if (!filler) {
             rSpawn.spawnCreep(getWorkerBody(energy), r + "_filler", DEFAULT_MEMORY)
         } else {
-            jobs.runFiller(basic, r)
+            jobs.runFiller(filler, r)
         }
     }
 };
